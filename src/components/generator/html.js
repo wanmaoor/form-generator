@@ -116,7 +116,8 @@ const layouts = {
 const tags = {
   'el-button': el => {
     const {
-      tag, disabled
+      tag,
+      disabled
     } = attrBuilder(el)
     const type = el.type ? `type="${el.type}"` : ''
     const icon = el.icon ? `icon="${el.icon}"` : ''
@@ -131,7 +132,12 @@ const tags = {
   },
   'el-input': el => {
     const {
-      tag, disabled, vModel, clearable, placeholder, width
+      tag,
+      disabled,
+      vModel,
+      clearable,
+      placeholder,
+      width
     } = attrBuilder(el)
     const maxlength = el.maxlength ? `:maxlength="${el.maxlength}"` : ''
     const showWordLimit = el['show-word-limit'] ? 'show-word-limit' : ''
@@ -150,7 +156,10 @@ const tags = {
   },
   'el-input-number': el => {
     const {
-      tag, disabled, vModel, placeholder
+      tag,
+      disabled,
+      vModel,
+      placeholder
     } = attrBuilder(el)
     const controlsPosition = el['controls-position'] ? `controls-position=${el['controls-position']}` : ''
     const min = el.min ? `:min='${el.min}'` : ''
@@ -163,7 +172,12 @@ const tags = {
   },
   'el-select': el => {
     const {
-      tag, disabled, vModel, clearable, placeholder, width
+      tag,
+      disabled,
+      vModel,
+      clearable,
+      placeholder,
+      width
     } = attrBuilder(el)
     const filterable = el.filterable ? 'filterable' : ''
     const multiple = el.multiple ? 'multiple' : ''
@@ -173,7 +187,11 @@ const tags = {
     return `<${tag} ${vModel} ${placeholder} ${disabled} ${multiple} ${filterable} ${clearable} ${width}>${child}</${tag}>`
   },
   'el-radio-group': el => {
-    const { tag, disabled, vModel } = attrBuilder(el)
+    const {
+      tag,
+      disabled,
+      vModel
+    } = attrBuilder(el)
     const size = `size="${el.size}"`
     let child = buildElRadioGroupChild(el)
 
@@ -181,7 +199,11 @@ const tags = {
     return `<${tag} ${vModel} ${size} ${disabled}>${child}</${tag}>`
   },
   'el-checkbox-group': el => {
-    const { tag, disabled, vModel } = attrBuilder(el)
+    const {
+      tag,
+      disabled,
+      vModel
+    } = attrBuilder(el)
     const size = `size="${el.size}"`
     const min = el.min ? `:min="${el.min}"` : ''
     const max = el.max ? `:max="${el.max}"` : ''
@@ -191,7 +213,11 @@ const tags = {
     return `<${tag} ${vModel} ${min} ${max} ${size} ${disabled}>${child}</${tag}>`
   },
   'el-switch': el => {
-    const { tag, disabled, vModel } = attrBuilder(el)
+    const {
+      tag,
+      disabled,
+      vModel
+    } = attrBuilder(el)
     const activeText = el['active-text'] ? `active-text="${el['active-text']}"` : ''
     const inactiveText = el['inactive-text'] ? `inactive-text="${el['inactive-text']}"` : ''
     const activeColor = el['active-color'] ? `active-color="${el['active-color']}"` : ''
@@ -203,7 +229,12 @@ const tags = {
   },
   'el-cascader': el => {
     const {
-      tag, disabled, vModel, clearable, placeholder, width
+      tag,
+      disabled,
+      vModel,
+      clearable,
+      placeholder,
+      width
     } = attrBuilder(el)
     const options = el.options ? `:options="${el.__vModel__}Options"` : ''
     const props = el.props ? `:props="${el.__vModel__}Props"` : ''
@@ -214,7 +245,11 @@ const tags = {
     return `<${tag} ${vModel} ${options} ${props} ${width} ${showAllLevels} ${placeholder} ${separator} ${filterable} ${clearable} ${disabled}></${tag}>`
   },
   'el-slider': el => {
-    const { tag, disabled, vModel } = attrBuilder(el)
+    const {
+      tag,
+      disabled,
+      vModel
+    } = attrBuilder(el)
     const min = el.min ? `:min='${el.min}'` : ''
     const max = el.max ? `:max='${el.max}'` : ''
     const step = el.step ? `:step='${el.step}'` : ''
@@ -225,7 +260,12 @@ const tags = {
   },
   'el-time-picker': el => {
     const {
-      tag, disabled, vModel, clearable, placeholder, width
+      tag,
+      disabled,
+      vModel,
+      clearable,
+      placeholder,
+      width
     } = attrBuilder(el)
     const startPlaceholder = el['start-placeholder'] ? `start-placeholder="${el['start-placeholder']}"` : ''
     const endPlaceholder = el['end-placeholder'] ? `end-placeholder="${el['end-placeholder']}"` : ''
@@ -239,7 +279,12 @@ const tags = {
   },
   'el-date-picker': el => {
     const {
-      tag, disabled, vModel, clearable, placeholder, width
+      tag,
+      disabled,
+      vModel,
+      clearable,
+      placeholder,
+      width
     } = attrBuilder(el)
     const startPlaceholder = el['start-placeholder'] ? `start-placeholder="${el['start-placeholder']}"` : ''
     const endPlaceholder = el['end-placeholder'] ? `end-placeholder="${el['end-placeholder']}"` : ''
@@ -252,7 +297,11 @@ const tags = {
     return `<${tag} ${type} ${vModel} ${format} ${valueFormat} ${width} ${placeholder} ${startPlaceholder} ${endPlaceholder} ${rangeSeparator} ${clearable} ${readonly} ${disabled}></${tag}>`
   },
   'el-rate': el => {
-    const { tag, disabled, vModel } = attrBuilder(el)
+    const {
+      tag,
+      disabled,
+      vModel
+    } = attrBuilder(el)
     const max = el.max ? `:max='${el.max}'` : ''
     const allowHalf = el['allow-half'] ? 'allow-half' : ''
     const showText = el['show-text'] ? 'show-text' : ''
@@ -261,7 +310,11 @@ const tags = {
     return `<${tag} ${vModel} ${max} ${allowHalf} ${showText} ${showScore} ${disabled}></${tag}>`
   },
   'el-color-picker': el => {
-    const { tag, disabled, vModel } = attrBuilder(el)
+    const {
+      tag,
+      disabled,
+      vModel
+    } = attrBuilder(el)
     const size = `size="${el.size}"`
     const showAlpha = el['show-alpha'] ? 'show-alpha' : ''
     const colorFormat = el['color-format'] ? `color-format="${el['color-format']}"` : ''
@@ -279,14 +332,20 @@ const tags = {
     const autoUpload = el['auto-upload'] === false ? ':auto-upload="false"' : ''
     const beforeUpload = `:before-upload="${el.__vModel__}BeforeUpload"`
     const fileList = `:file-list="${el.__vModel__}fileList"`
+    const headers = `:headers="${JSON.stringify(el.headers)
+      .replace(/"/g, '\'')}"`
     const ref = `ref="${el.__vModel__}"`
     let child = buildElUploadChild(el)
 
     if (child) child = `\n${child}\n` // 换行
-    return `<${tag} ${ref} ${fileList} ${action} ${autoUpload} ${multiple} ${beforeUpload} ${listType} ${accept} ${name} ${disabled}>${child}</${tag}>`
+    return `<${tag} ${headers}  ${ref} ${fileList} ${action} ${autoUpload} ${multiple} ${beforeUpload} ${listType} ${accept} ${name} ${disabled}>${child}</${tag}>`
   },
   tinymce: el => {
-    const { tag, vModel, placeholder } = attrBuilder(el)
+    const {
+      tag,
+      vModel,
+      placeholder
+    } = attrBuilder(el)
     const height = el.height ? `:height="${el.height}"` : ''
     const branding = el.branding ? `:branding="${el.branding}"` : ''
     return `<${tag} ${vModel} ${placeholder} ${height} ${branding}></${tag}>`
@@ -367,8 +426,11 @@ function buildElCheckboxGroupChild(scheme) {
 function buildElUploadChild(scheme) {
   const list = []
   const config = scheme.__config__
-  if (scheme['list-type'] === 'picture-card') list.push('<i class="el-icon-plus"></i>')
-  else list.push(`<el-button size="small" type="primary" icon="el-icon-upload">${config.buttonText}</el-button>`)
+  if (scheme['list-type'] === 'picture-card') {
+    list.push('<i class="el-icon-plus"></i>')
+  } else {
+    list.push(`<el-button size="small" type="primary" icon="el-icon-upload">${config.buttonText}</el-button>`)
+  }
   if (config.showTip) list.push(`<div slot="tip" class="el-upload__tip">只能上传不超过 ${config.fileSize}${config.sizeUnit} 的${scheme.accept}文件</div>`)
   return list.join('\n')
 }

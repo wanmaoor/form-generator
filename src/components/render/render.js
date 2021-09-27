@@ -1,5 +1,5 @@
 import { deepClone } from '@/utils/index'
-
+import axios from 'axios'
 const componentChild = {}
 /**
  * 将./slots中的文件挂载到对象componentChild上
@@ -20,6 +20,17 @@ function vModel(dataObject, defaultValue) {
   dataObject.on.input = val => {
     this.$emit('input', val)
   }
+}
+// 收集label
+function collectLabels(arr, list) {
+  arr.forEach(item => {
+    if (item.children.length > 0) {
+      collectLabels(item.children, list)
+    }
+    if (Object.prototype.hasOwnProperty.call(item, 'labels')) {
+      list.push(...item.labels)
+    }
+  })
 }
 
 function mountSlotFiles(h, confClone, children) {
@@ -101,6 +112,29 @@ export default {
     conf: {
       type: Object,
       required: true
+    }
+  },
+  created() {
+    if (this.conf.__vModel__ === 'itemTag') {
+      // 预先清空配置项
+      if (this.conf.__slot__) {
+        this.conf.__slot__.options = []
+      }
+      const url = this.conf.__config__.url
+      const method = this.conf.__config__.method
+      return axios({
+        method,
+        url,
+        headers: {
+          "Atom-Auth": `bearer ${JSON.parse(sessionStorage.getItem("atom-token")).content}`
+        }
+      }).then(res => res.data.data).then(data => {
+        const labelList = []
+        collectLabels(data, labelList)
+        labelList.forEach(item => {
+          this.conf.__slot__.options.push({label: item.tagName, value: item.id})
+        })
+      })
     }
   },
   render(h) {

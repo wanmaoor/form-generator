@@ -153,6 +153,42 @@ export const inputComponents = [
 export const selectComponents = [
   {
     __config__: {
+      label: '标签选择',
+      url: 'https://my-json-server.typicode.com/wanmaoor/label/db',
+      dataPath: 'data',
+      method: 'get',
+      showLabel: true,
+      labelWidth: null,
+      tag: 'el-select',
+      tagIcon: 'select',
+      layout: 'colFormItem',
+      span: 24,
+      required: true,
+      regList: [],
+      changeTag: false,
+      dataType: 'dynamic',
+      document: 'https://element.eleme.cn/#/zh-CN/component/select',
+      dataConsumer: '__slot__.options'
+    },
+    __slot__: {
+      options: [{
+        label: '选项一',
+        value: 1
+      }, {
+        label: '选项二',
+        value: 2
+      }]
+    },
+    placeholder: '请选择',
+    style: { width: '100%' },
+    clearable: true,
+    disabled: false,
+    filterable: false,
+    multiple: false,
+    specialHandle: true
+  },
+  {
+    __config__: {
       label: '下拉选择',
       showLabel: true,
       labelWidth: null,
@@ -162,7 +198,7 @@ export const selectComponents = [
       span: 24,
       required: true,
       regList: [],
-      changeTag: true,
+      changeTag: false,
       document: 'https://element.eleme.cn/#/zh-CN/component/select'
     },
     __slot__: {
@@ -505,7 +541,16 @@ export const selectComponents = [
     name: 'file',
     'auto-upload': true,
     'list-type': 'text',
-    multiple: false
+    multiple: false,
+    headers: (() => {
+      const token = sessionStorage.getItem('atom-token')
+      if (token) {
+        return {
+          'Atom-Auth': `bearer ${JSON.parse(token).content}`
+        }
+      }
+      return {}
+    })()
   }
 ]
 

@@ -33,5 +33,42 @@ export default [
     'show-word-limit': true,
     readonly: false,
     disabled: false
+  },
+  {
+    __vModel__: 'test-item-tag',
+    __config__: {
+      label: '标签选择',
+      url: 'https://my-json-server.typicode.com/wanmaoor/label/db',
+      dataPath: 'data',
+      method: 'get',
+      showLabel: true,
+      labelWidth: null,
+      tag: 'el-select',
+      tagIcon: 'select',
+      layout: 'colFormItem',
+      span: 24,
+      required: true,
+      regList: [],
+      changeTag: false,
+      dataType: 'dynamic',
+      document: 'https://element.eleme.cn/#/zh-CN/component/select',
+      dataConsumer: '__slot__.options'
+    },
+    __slot__: {
+      options: [{
+        label: '选项一',
+        value: 1
+      }, {
+        label: '选项二',
+        value: 2
+      }]
+    },
+    placeholder: '请选择',
+    style: { width: '100%' },
+    clearable: true,
+    disabled: false,
+    filterable: false,
+    multiple: false,
+    specialHandle: true
   }
 ]

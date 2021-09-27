@@ -180,6 +180,7 @@ export default {
     }
   },
   render(h) {
+    console.log('渲染Parser组件')
     return renderFrom.call(this, h)
   }
 }

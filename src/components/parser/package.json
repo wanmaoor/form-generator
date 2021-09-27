@@ -1,6 +1,6 @@
 {
-  "name": "form-gen-parser",
-  "version": "1.0.3",
+  "name": "ylz-form-gen-parser",
+  "version": "1.0.9",
   "description": "表单json解析器",
   "main": "lib/form-gen-parser.umd.js",
   "directories": {
@@ -11,12 +11,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/JakHuang/form-generator.git"
+    "url": "git@github.com:wanmaoor/form-generator.git"
   },
   "dependencies": {
     "form-gen-render": "^1.0.0"
   },
-  "author": "jakHuang",
+  "author": "wanmao",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/JakHuang/form-generator/issues"

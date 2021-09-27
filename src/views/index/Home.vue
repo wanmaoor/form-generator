@@ -5,7 +5,7 @@
         <div class="logo">
           <img :src="logo" alt="logo"> Form Generator
           <a class="github" href="https://github.com/JakHuang/form-generator" target="_blank">
-            <img src="https://github.githubassets.com/pinned-octocat.svg" alt>
+            <img alt src="https://github.githubassets.com/pinned-octocat.svg">
           </a>
         </div>
       </div>
@@ -17,12 +17,12 @@
               {{ item.title }}
             </div>
             <draggable
-              class="components-draggable"
-              :list="item.list"
-              :group="{ name: 'componentsGroup', pull: 'clone', put: false }"
               :clone="cloneComponent"
-              draggable=".components-item"
+              :group="{ name: 'componentsGroup', pull: 'clone', put: false }"
+              :list="item.list"
               :sort="false"
+              class="components-draggable"
+              draggable=".components-item"
               @end="onEnd"
             >
               <div
@@ -61,22 +61,22 @@
         </el-button>
       </div>
       <el-scrollbar class="center-scrollbar">
-        <el-row class="center-board-row" :gutter="formConf.gutter">
+        <el-row :gutter="formConf.gutter" class="center-board-row">
           <el-form
-            :size="formConf.size"
-            :label-position="formConf.labelPosition"
             :disabled="formConf.disabled"
+            :label-position="formConf.labelPosition"
             :label-width="formConf.labelWidth + 'px'"
+            :size="formConf.size"
           >
-            <draggable class="drawing-board" :list="drawingList" :animation="340" group="componentsGroup">
+            <draggable :animation="340" :list="drawingList" class="drawing-board" group="componentsGroup">
               <draggable-item
                 v-for="(item, index) in drawingList"
                 :key="item.renderKey"
-                :drawing-list="drawingList"
-                :current-item="item"
-                :index="index"
                 :active-id="activeId"
+                :current-item="item"
+                :drawing-list="drawingList"
                 :form-conf="formConf"
+                :index="index"
                 @activeItem="activeFormItem"
                 @copyItem="drawingItemCopy"
                 @deleteItem="drawingItemDelete"
@@ -99,21 +99,21 @@
     />
 
     <form-drawer
-      :visible.sync="drawerVisible"
       :form-data="formData"
-      size="100%"
       :generate-conf="generateConf"
+      :visible.sync="drawerVisible"
+      size="100%"
     />
     <json-drawer
-      size="60%"
-      :visible.sync="jsonDrawerVisible"
       :json-str="JSON.stringify(formData)"
+      :visible.sync="jsonDrawerVisible"
+      size="60%"
       @refresh="refreshJson"
     />
     <code-type-dialog
+      :show-file-name="showFileName"
       :visible.sync="dialogVisible"
       title="选择生成类型"
-      :show-file-name="showFileName"
       @confirm="generate"
     />
     <input id="copyNode" type="hidden">
@@ -130,13 +130,13 @@ import FormDrawer from './FormDrawer'
 import JsonDrawer from './JsonDrawer'
 import RightPanel from './RightPanel'
 import {
-  inputComponents, selectComponents, layoutComponents, formConf
+  formConf, inputComponents, layoutComponents, selectComponents
 } from '@/components/generator/config'
 import {
-  exportDefault, beautifierConf, isNumberStr, titleCase, deepClone, isObjectObject
+  beautifierConf, deepClone, isObjectObject, titleCase
 } from '@/utils/index'
 import {
-  makeUpHtml, vueTemplate, vueScript, cssStyle
+  cssStyle, makeUpHtml, vueScript, vueTemplate
 } from '@/components/generator/html'
 import { makeUpJs } from '@/components/generator/js'
 import { makeUpCss } from '@/components/generator/css'
@@ -145,12 +145,15 @@ import logo from '@/assets/logo.png'
 import CodeTypeDialog from './CodeTypeDialog'
 import DraggableItem from './DraggableItem'
 import {
-  getDrawingList, saveDrawingList, getIdGlobal, saveIdGlobal, getFormConf
+  getDrawingList, getFormConf, getIdGlobal, saveDrawingList, saveIdGlobal
 } from '@/utils/db'
 import loadBeautifier from '@/utils/loadBeautifier'
 
 let beautifier
-const emptyActiveData = { style: {}, autosize: {} }
+const emptyActiveData = {
+  style: {},
+  autosize: {}
+}
 let oldActiveId
 let tempActiveData
 const drawingListInDB = getDrawingList()
@@ -204,8 +207,7 @@ export default {
       ]
     }
   },
-  computed: {
-  },
+  computed: {},
   watch: {
     // eslint-disable-next-line func-names
     'activeData.__config__.label': function (val, oldVal) {
@@ -279,9 +281,14 @@ export default {
       }, obj)
     },
     setRespData(component, resp) {
-      const { dataPath, renderKey, dataConsumer } = component.__config__
+      const {
+        dataPath,
+        renderKey,
+        dataConsumer
+      } = component.__config__
       if (!dataPath || !dataConsumer) return
-      const respData = dataPath.split('.').reduce((pre, item) => pre[item], resp)
+      const respData = dataPath.split('.')
+        .reduce((pre, item) => pre[item], resp)
 
       // 将请求回来的数据，赋值到指定属性。
       // 以el-tabel为例，根据Element文档，应该将数据赋值给el-tabel的data属性，所以dataConsumer的值应为'data';
@@ -292,17 +299,44 @@ export default {
       if (i > -1) this.$set(this.drawingList, i, component)
     },
     fetchData(component) {
-      const { dataType, method, url } = component.__config__
+      const {
+        dataType,
+        method,
+        url
+      } = component.__config__
       if (dataType === 'dynamic' && method && url) {
         this.setLoading(component, true)
         this.$axios({
           method,
           url
-        }).then(resp => {
-          this.setLoading(component, false)
-          this.setRespData(component, resp.data)
         })
+          .then(resp => {
+            this.setLoading(component, false)
+            if (component.specialHandle) {
+              // 需要对标签数据进行特殊处理, 将所有标签提取出来
+              const labelList = []
+              this.collectLabels(resp.data.data, labelList)
+              this.setRespData(component, {
+                [component.__config__.dataPath]: labelList.map(label => ({
+                  label: label.tagName,
+                  value: label.id
+                }))
+              })
+            } else {
+              this.setRespData(component, resp.data)
+            }
+          })
       }
+    },
+    collectLabels(arr, list) {
+      arr.forEach(item => {
+        if (item.children.length > 0) {
+          this.collectLabels(item.children, list)
+        }
+        if (Object.prototype.hasOwnProperty.call(item, 'labels')) {
+          list.push(...item.labels)
+        }
+      })
     },
     setLoading(component, val) {
       const { directives } = component
@@ -374,15 +408,17 @@ export default {
       saveAs(blob, data.fileName)
     },
     execCopy(data) {
-      document.getElementById('copyNode').click()
+      document.getElementById('copyNode')
+        .click()
     },
     empty() {
-      this.$confirm('确定要清空所有组件吗？', '提示', { type: 'warning' }).then(
-        () => {
-          this.drawingList = []
-          this.idGlobal = 100
-        }
-      )
+      this.$confirm('确定要清空所有组件吗？', '提示', { type: 'warning' })
+        .then(
+          () => {
+            this.drawingList = []
+            this.idGlobal = 100
+          }
+        )
     },
     drawingItemCopy(item, list) {
       let clone = deepClone(item)
@@ -438,11 +474,12 @@ export default {
       if (typeof this.activeData.__config__.defaultValue === typeof config.defaultValue) {
         config.defaultValue = this.activeData.__config__.defaultValue
       }
-      Object.keys(newTag).forEach(key => {
-        if (this.activeData[key] !== undefined) {
-          newTag[key] = this.activeData[key]
-        }
-      })
+      Object.keys(newTag)
+        .forEach(key => {
+          if (this.activeData[key] !== undefined) {
+            newTag[key] = this.activeData[key]
+          }
+        })
       this.activeData = newTag
       this.updateDrawingList(newTag, this.drawingList)
     },
@@ -465,6 +502,6 @@ export default {
 }
 </script>
 
-<style lang='scss'>
+<style lang="scss">
 @import '@/styles/home';
 </style>

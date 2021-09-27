@@ -1,15 +1,15 @@
 <template>
   <div>
-    <el-drawer v-bind="$attrs" v-on="$listeners" @opened="onOpen" @close="onClose">
+    <el-drawer v-bind="$attrs" @close="onClose" @opened="onOpen" v-on="$listeners">
       <div style="height:100%">
         <el-row style="height:100%;overflow:auto">
-          <el-col :md="24" :lg="12" class="left-editor">
+          <el-col :lg="12" :md="24" class="left-editor">
             <div class="setting" title="资源引用" @click="showResource">
               <el-badge :is-dot="!!resources.length" class="item">
                 <i class="el-icon-setting" />
               </el-badge>
             </div>
-            <el-tabs v-model="activeTab" type="card" class="editor-tabs">
+            <el-tabs v-model="activeTab" class="editor-tabs" type="card">
               <el-tab-pane name="html">
                 <span slot="label">
                   <i v-if="activeTab==='html'" class="el-icon-edit" />
@@ -36,8 +36,8 @@
             <div v-show="activeTab==='js'" id="editorJs" class="tab-editor" />
             <div v-show="activeTab==='css'" id="editorCss" class="tab-editor" />
           </el-col>
-          <el-col :md="24" :lg="12" class="right-preview">
-            <div class="action-bar" :style="{'text-align': 'left'}">
+          <el-col :lg="12" :md="24" class="right-preview">
+            <div :style="{'text-align': 'left'}" class="action-bar">
               <span class="bar-btn" @click="runCode">
                 <i class="el-icon-refresh" />
                 刷新
@@ -69,8 +69,8 @@
       </div>
     </el-drawer>
     <resource-dialog
-      :visible.sync="resourceVisible"
       :origin-resource="resources"
+      :visible.sync="resourceVisible"
       @save="setResource"
     />
   </div>
@@ -80,11 +80,11 @@ import { parse } from '@babel/parser'
 import ClipboardJS from 'clipboard'
 import { saveAs } from 'file-saver'
 import {
-  makeUpHtml, vueTemplate, vueScript, cssStyle
+  cssStyle, makeUpHtml, vueScript, vueTemplate
 } from '@/components/generator/html'
 import { makeUpJs } from '@/components/generator/js'
 import { makeUpCss } from '@/components/generator/css'
-import { exportDefault, beautifierConf, titleCase } from '@/utils/index'
+import { beautifierConf, exportDefault } from '@/utils/index'
 import ResourceDialog from './ResourceDialog'
 import loadMonaco from '@/utils/loadMonaco'
 import loadBeautifier from '@/utils/loadBeautifier'
@@ -258,18 +258,20 @@ export default {
         inputValue: `${+new Date()}.vue`,
         closeOnClickModal: false,
         inputPlaceholder: '请输入文件名'
-      }).then(({ value }) => {
-        if (!value) value = `${+new Date()}.vue`
-        const codeStr = this.generateCode()
-        const blob = new Blob([codeStr], { type: 'text/plain;charset=utf-8' })
-        saveAs(blob, value)
       })
+        .then(({ value }) => {
+          if (!value) value = `${+new Date()}.vue`
+          const codeStr = this.generateCode()
+          const blob = new Blob([codeStr], { type: 'text/plain;charset=utf-8' })
+          saveAs(blob, value)
+        })
     },
     showResource() {
       this.resourceVisible = true
     },
     setResource(arr) {
-      const scripts = []; const
+      const scripts = []
+      const
         links = []
       if (Array.isArray(arr)) {
         arr.forEach(item => {
@@ -292,6 +294,7 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/styles/mixin.scss';
+
 .tab-editor {
   position: absolute;
   top: 33px;
@@ -300,13 +303,15 @@ export default {
   right: 0;
   font-size: 14px;
 }
+
 .left-editor {
   position: relative;
   height: 100%;
   background: #1e1e1e;
   overflow: hidden;
 }
-.setting{
+
+.setting {
   position: absolute;
   right: 15px;
   top: 3px;
@@ -315,8 +320,10 @@ export default {
   cursor: pointer;
   z-index: 1;
 }
+
 .right-preview {
   height: 100%;
+
   .result-wrapper {
     height: calc(100vh - 33px);
     width: 100%;
@@ -325,6 +332,7 @@ export default {
     box-sizing: border-box;
   }
 }
+
 @include action-bar;
 ::v-deep .el-drawer__header {
   display: none;
