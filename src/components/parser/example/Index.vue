@@ -1,6 +1,6 @@
 <template>
   <div class="test-form">
-    <parser :form-conf="formConf" @submit="sumbitForm1" />
+    <parser :form-conf="formConf" :loading="parser1Loading" @submit="sumbitForm1" />
     <parser :key="key2" :form-conf="formConf" @submit="sumbitForm2" />
     <el-button @click="change">
       change
@@ -21,6 +21,7 @@ export default {
   props: {},
   data() {
     return {
+      parser1Loading: false,
       key2: +new Date(),
       formConf: {
         fields: [
@@ -276,7 +277,8 @@ export default {
   },
   computed: {},
   watch: {},
-  created() {},
+  created() {
+  },
   mounted() {
     // 表单数据回填，模拟异步请求场景
     setTimeout(() => {
@@ -306,7 +308,11 @@ export default {
       this.formConf2 = t
     },
     sumbitForm1(data) {
+      this.parser1Loading = true
       console.log('sumbitForm1提交数据：', data)
+      setTimeout(() => {
+        this.parser1Loading = false
+      }, 3000)
     },
     sumbitForm2(data) {
       console.log('sumbitForm2提交数据：', data)

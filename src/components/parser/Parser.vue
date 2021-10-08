@@ -72,7 +72,11 @@ function renderFrom(h) {
 function formBtns(h) {
   return <el-col>
     <el-form-item size="large">
-      <el-button type="primary" onClick={this.submitForm}>提交</el-button>
+      <el-button
+        type="primary"
+        onClick={this.submitForm}
+        loading={this.loading}
+      >提交</el-button>
       <el-button onClick={this.resetForm}>重置</el-button>
     </el-form-item>
   </el-col>
@@ -124,6 +128,10 @@ export default {
     formConf: {
       type: Object,
       required: true
+    },
+    loading: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -180,7 +188,6 @@ export default {
     }
   },
   render(h) {
-    console.log('渲染Parser组件')
     return renderFrom.call(this, h)
   }
 }
