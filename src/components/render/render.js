@@ -1,5 +1,7 @@
 import { deepClone } from '@/utils/index'
+// eslint-disable-next-line import/no-extraneous-dependencies
 import axios from 'axios'
+
 const componentChild = {}
 /**
  * 将./slots中的文件挂载到对象componentChild上
@@ -114,25 +116,26 @@ export default {
       required: true
     }
   },
+  // eslint-disable-next-line consistent-return
   created() {
     if (this.conf.__vModel__ === 'itemTag') {
       // 预先清空配置项
       if (this.conf.__slot__) {
         this.conf.__slot__.options = []
       }
-      const url = this.conf.__config__.url
-      const method = this.conf.__config__.method
+      const { url } = this.conf.__config__
+      const { method } = this.conf.__config__
       return axios({
         method,
         url,
         headers: {
-          "Atom-Auth": `bearer ${JSON.parse(sessionStorage.getItem("atom-token")).content}`
+          'Atom-Auth': `bearer ${JSON.parse(sessionStorage.getItem('atom-token')).content}`
         }
       }).then(res => res.data.data).then(data => {
         const labelList = []
         collectLabels(data, labelList)
         labelList.forEach(item => {
-          this.conf.__slot__.options.push({label: item.tagName, value: item.id})
+          this.conf.__slot__.options.push({ label: item.tagName, value: item.id })
         })
       })
     }
@@ -150,7 +153,6 @@ export default {
 
     // 将json表单配置转化为vue render可以识别的 “数据对象（dataObject）”
     buildDataObject.call(this, confClone, dataObject)
-
     return h(this.conf.__config__.tag, dataObject, children)
   }
 }

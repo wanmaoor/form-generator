@@ -24,8 +24,9 @@ const layouts = {
     return (
       <el-col span={config.span}>
         <el-form-item label-width={labelWidth} prop={scheme.__vModel__}
-          label={config.showLabel ? config.label : ''}>
-          <render conf={scheme} on={listeners} />
+                      label={config.showLabel ? config.label : ''}
+        >
+          <render conf={scheme} on={listeners}/>
         </el-form-item>
       </el-col>
     )
@@ -34,8 +35,8 @@ const layouts = {
     let child = renderChildren.apply(this, arguments)
     if (scheme.type === 'flex') {
       child = <el-row type={scheme.type} justify={scheme.justify} align={scheme.align}>
-              {child}
-            </el-row>
+        {child}
+      </el-row>
     }
     return (
       <el-col span={scheme.span}>
@@ -76,7 +77,8 @@ function formBtns(h) {
         type="primary"
         onClick={this.submitForm}
         loading={this.loading}
-      >提交</el-button>
+      >提交
+      </el-button>
       <el-button onClick={this.resetForm}>重置</el-button>
     </el-form-item>
   </el-col>
@@ -109,14 +111,19 @@ function buildListeners(scheme) {
   const config = scheme.__config__
   const methods = this.formConf.__methods__ || {}
   const listeners = {}
-
   // 给__methods__中的方法绑定this和event
-  Object.keys(methods).forEach(key => {
-    listeners[key] = event => methods[key].call(this, event)
-  })
+  Object.keys(methods)
+    .forEach(key => {
+      if (key === 'handleUpload') {
+        listeners[key] = event => methods[key].call(this, event, scheme)
+      } else {
+        listeners[key] = event => methods[key].call(this, event)
+      }
+    })
   // 响应 render.js 中的 vModel $emit('input', val)
   listeners.input = event => setValue.call(this, event, config, scheme)
-
+  // 响应一下文件上传
+  // listeners.handleUpload = event => setValue.call(this, event, config, scheme)
   return listeners
 }
 
@@ -157,7 +164,10 @@ export default {
         const config = cur.__config__
         if (Array.isArray(config.regList)) {
           if (config.required) {
-            const required = { required: config.required, message: cur.placeholder }
+            const required = {
+              required: config.required,
+              message: cur.placeholder
+            }
             if (Array.isArray(config.defaultValue)) {
               required.type = 'array'
               required.message = `请至少选择一个${config.label}`
